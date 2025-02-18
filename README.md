@@ -7,14 +7,11 @@
 
 ## 安装
 
-请参考 [PKUAutoElective](https://github.com/zhongxinghong/PKUAutoElective) 项目提供的安装指南进行安装，但本项目**不**依赖于 `pytorch`，因此可以**省略**其中的以下部分：
+安装依赖项：
 
-> 安装 PyTorch，从 PyTorch 官网 中选择合适的条件获得下载命令，然后复制粘贴到命令行中运行即可下载安装。（注：本项目不需要 cuda，当然你可以安装带 gpu 优化的版本）
-> 
-> ......
-> 
-> PyTorch 安装时间可能比较长，需耐心等待。
-> 如果实在无法安装，可以考虑用其他方式安装 PyTorch，详见附页 PyTorch 安装
+```
+pip install -r requirements.txt
+```
 
 ## 配置文件
 

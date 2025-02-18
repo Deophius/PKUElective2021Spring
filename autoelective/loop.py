@@ -15,7 +15,7 @@ import numpy as np
 from . import __version__, __date__
 from .environ import Environ
 from .config import AutoElectiveConfig
-from .logger import ConsoleLogger, FileLogger
+from .logger import ConsoleLogger, FileInfoLogger, FileWarningLogger
 from .course import Course
 from .captcha import TTShituRecognizer, Captcha
 from .parser import get_tables, get_courses, get_courses_with_detail, get_sida
@@ -28,8 +28,8 @@ from ._internal import mkdir
 
 environ = Environ()
 config = AutoElectiveConfig()
-cout = ConsoleLogger("loop")
-ferr = FileLogger("loop.error") # loop 的子日志，同步输出到 console
+cout = FileInfoLogger("loop.info")
+ferr = FileWarningLogger("loop.error") # loop 的子日志，同步输出到 console
 
 username = config.iaaa_id
 password = config.iaaa_password
@@ -120,7 +120,7 @@ def run_iaaa_loop():
         user_agent = random.choice(USER_AGENT_LIST)
 
         cout.info("Try to login IAAA (client: %s)" % elective.id)
-        cout.info("User-Agent: %s" % user_agent)
+        # cout.info("User-Agent: %s" % user_agent)
 
         try:
 
@@ -156,7 +156,7 @@ def run_iaaa_loop():
 
             cout.info("Login success (client: %s, expired_time: %s)" % (
                       elective.id, _format_timestamp(elective.expired_time)))
-            cout.info("")
+            # cout.info("")
 
             electivePool.put_nowait(elective)
             elective = None
@@ -216,9 +216,9 @@ def run_iaaa_loop():
 
         finally:
             t = login_loop_interval
-            cout.info("")
+            # cout.info("")
             cout.info("IAAA login loop sleep %s s" % t)
-            cout.info("")
+            # cout.info("")
             time.sleep(t)
 
 
@@ -274,36 +274,36 @@ def run_elective_loop():
 
     ## print header
 
-    header = "# PKU Auto-Elective Tool v%s (%s) #" % (__version__, __date__)
-    line = "#" + "-" * (len(header) - 2) + "#"
+    # header = "# PKU Auto-Elective Tool v%s (%s) #" % (__version__, __date__)
+    # line = "#" + "-" * (len(header) - 2) + "#"
 
-    cout.info(line)
-    cout.info(header)
-    cout.info(line)
-    cout.info("")
+    # cout.info(line)
+    # cout.info(header)
+    # cout.info(line)
+    # cout.info("")
 
-    line = "-" * 30
+    # line = "-" * 30
 
-    cout.info("> User Agent")
-    cout.info(line)
-    cout.info("pool_size: %d" % len(USER_AGENT_LIST))
-    cout.info(line)
-    cout.info("")
-    cout.info("> Config")
-    cout.info(line)
-    cout.info("is_dual_degree: %s" % is_dual_degree)
-    cout.info("identity: %s" % identity)
-    cout.info("refresh_interval: %s" % refresh_interval)
-    cout.info("refresh_random_deviation: %s" % refresh_random_deviation)
-    cout.info("supply_cancel_page: %s" % supply_cancel_page)
-    cout.info("iaaa_client_timeout: %s" % iaaa_client_timeout)
-    cout.info("elective_client_timeout: %s" % elective_client_timeout)
-    cout.info("login_loop_interval: %s" % login_loop_interval)
-    cout.info("elective_client_pool_size: %s" % elective_client_pool_size)
-    cout.info("elective_client_max_life: %s" % elective_client_max_life)
-    cout.info("is_print_mutex_rules: %s" % is_print_mutex_rules)
-    cout.info(line)
-    cout.info("")
+    # cout.info("> User Agent")
+    # cout.info(line)
+    # cout.info("pool_size: %d" % len(USER_AGENT_LIST))
+    # cout.info(line)
+    # cout.info("")
+    # cout.info("> Config")
+    # cout.info(line)
+    # cout.info("is_dual_degree: %s" % is_dual_degree)
+    # cout.info("identity: %s" % identity)
+    # cout.info("refresh_interval: %s" % refresh_interval)
+    # cout.info("refresh_random_deviation: %s" % refresh_random_deviation)
+    # cout.info("supply_cancel_page: %s" % supply_cancel_page)
+    # cout.info("iaaa_client_timeout: %s" % iaaa_client_timeout)
+    # cout.info("elective_client_timeout: %s" % elective_client_timeout)
+    # cout.info("login_loop_interval: %s" % login_loop_interval)
+    # cout.info("elective_client_pool_size: %s" % elective_client_pool_size)
+    # cout.info("elective_client_max_life: %s" % elective_client_max_life)
+    # cout.info("is_print_mutex_rules: %s" % is_print_mutex_rules)
+    # cout.info(line)
+    # cout.info("")
 
     while True:
 
@@ -314,55 +314,55 @@ def run_elective_loop():
 
         environ.elective_loop += 1
 
-        cout.info("")
+        # cout.info("")
         cout.info("======== Loop %d ========" % environ.elective_loop)
-        cout.info("")
+        # cout.info("")
 
         ## print current plans
 
         current = [ c for c in goals if c not in ignored ]
-        if len(current) > 0:
-            cout.info("> Current tasks")
-            cout.info(line)
-            for ix, course in enumerate(current):
-                cout.info("%02d. %s" % (ix + 1, course))
-            cout.info(line)
-            cout.info("")
+        # if len(current) > 0:
+        #     cout.info("> Current tasks")
+        #     cout.info(line)
+        #     for ix, course in enumerate(current):
+        #         cout.info("%02d. %s" % (ix + 1, course))
+        #     cout.info(line)
+        #     cout.info("")
 
         ## print ignored course
 
-        if len(ignored) > 0:
-            cout.info("> Ignored tasks")
-            cout.info(line)
-            for ix, (course, reason) in enumerate(ignored.items()):
-                cout.info("%02d. %s  %s" % (ix + 1, course, reason))
-            cout.info(line)
-            cout.info("")
+        # if len(ignored) > 0:
+        #     cout.info("> Ignored tasks")
+        #     cout.info(line)
+        #     for ix, (course, reason) in enumerate(ignored.items()):
+        #         cout.info("%02d. %s  %s" % (ix + 1, course, reason))
+        #     cout.info(line)
+        #     cout.info("")
 
         ## print mutex rules
 
-        if np.any(mutexes):
-            cout.info("> Mutex rules")
-            cout.info(line)
-            ixs = [ (ix1, ix2) for ix1, ix2 in np.argwhere( mutexes == 1 ) if ix1 < ix2 ]
-            if is_print_mutex_rules:
-                for ix, (ix1, ix2) in enumerate(ixs):
-                    cout.info("%02d. %s --x-- %s" % (ix + 1, goals[ix1], goals[ix2]))
-            else:
-                cout.info("%d mutex rules" % len(ixs))
-            cout.info(line)
-            cout.info("")
+        # if np.any(mutexes):
+        #     cout.info("> Mutex rules")
+        #     cout.info(line)
+        #     ixs = [ (ix1, ix2) for ix1, ix2 in np.argwhere( mutexes == 1 ) if ix1 < ix2 ]
+        #     if is_print_mutex_rules:
+        #         for ix, (ix1, ix2) in enumerate(ixs):
+        #             cout.info("%02d. %s --x-- %s" % (ix + 1, goals[ix1], goals[ix2]))
+        #     else:
+        #         cout.info("%d mutex rules" % len(ixs))
+        #     cout.info(line)
+        #     cout.info("")
 
         ## print delay rules
 
-        if np.any( delays != NO_DELAY ):
-            cout.info("> Delay rules")
-            cout.info(line)
-            ds = [ (cix, threshold) for cix, threshold in enumerate(delays) if threshold != NO_DELAY ]
-            for ix, (cix, threshold) in enumerate(ds):
-                cout.info("%02d. %s --- %d" % (ix + 1, goals[cix], threshold))
-            cout.info(line)
-            cout.info("")
+        # if np.any( delays != NO_DELAY ):
+        #     cout.info("> Delay rules")
+        #     cout.info(line)
+        #     ds = [ (cix, threshold) for cix, threshold in enumerate(delays) if threshold != NO_DELAY ]
+        #     for ix, (cix, threshold) in enumerate(ds):
+        #         cout.info("%02d. %s --- %d" % (ix + 1, goals[cix], threshold))
+        #     cout.info(line)
+        #     cout.info("")
 
         if len(current) == 0:
             cout.info("No tasks")
@@ -372,10 +372,10 @@ def run_elective_loop():
 
         ## print client info
 
-        cout.info("> Current client: %s (qsize: %s)" % (elective.id, electivePool.qsize() + 1))
-        cout.info("> Client expired time: %s" % _format_timestamp(elective.expired_time))
-        cout.info("User-Agent: %s" % elective.user_agent)
-        cout.info("")
+        # cout.info("> Current client: %s (qsize: %s)" % (elective.id, electivePool.qsize() + 1))
+        # cout.info("> Client expired time: %s" % _format_timestamp(elective.expired_time))
+        # cout.info("User-Agent: %s" % elective.user_agent)
+        # cout.info("")
 
         try:
 
@@ -396,7 +396,7 @@ def run_elective_loop():
 
             if supply_cancel_page == 1:
 
-                cout.info("Get SupplyCancel page %s" % supply_cancel_page)
+                # cout.info("Get SupplyCancel page %s" % supply_cancel_page)
 
                 r = page_r = elective.get_SupplyCancel(username)
                 tables = get_tables(r._tree)
@@ -432,7 +432,7 @@ def run_elective_loop():
                         cout.error("unable to get normal Supplement page %s" % supply_cancel_page)
                         raise _ElectiveCorrupted
 
-                    cout.info("Get Supplement page %s" % supply_cancel_page)
+                    # cout.info("Get Supplement page %s" % supply_cancel_page)
                     r = page_r = elective.get_supplement(username, page=supply_cancel_page) # 双学位第二页
                     tables = get_tables(r._tree)
                     try:
@@ -440,7 +440,7 @@ def run_elective_loop():
                         plans = get_courses_with_detail(tables[0])
                     except IndexError as e:
                         cout.warning("IndexError encountered")
-                        cout.info("Get SupplyCancel first to prevent empty table returned")
+                        # cout.info("Get SupplyCancel first to prevent empty table returned")
                         _ = elective.get_SupplyCancel(username) # 遇到空页面时请求一次补退选主页，之后就可以不断刷新
                     else:
                         break
@@ -449,20 +449,20 @@ def run_elective_loop():
 
             ## check available courses
 
-            cout.info("Get available courses")
+            # cout.info("Get available courses")
 
             tasks = [] # [(ix, course)]
             for ix, c in enumerate(goals):
                 if c in ignored:
                     continue
                 elif c in elected:
-                    cout.info("%s is elected, ignored" % c)
+                    # cout.info("%s is elected, ignored" % c)
                     _ignore_course(c, "Elected")
                     for (mix, ) in np.argwhere( mutexes[ix,:] == 1 ):
                         mc = goals[mix]
                         if mc in ignored:
                             continue
-                        cout.info("%s is simultaneously ignored by mutex rules" % mc)
+                        # cout.info("%s is simultaneously ignored by mutex rules" % mc)
                         _ignore_course(mc, "Mutex rules")
                 else:
                     for c0 in plans: # c0 has detail
@@ -470,7 +470,8 @@ def run_elective_loop():
                             if c0.is_available():
                                 delay = delays[ix]
                                 if delay != NO_DELAY and c0.remaining_quota > delay:
-                                    cout.info("%s hasn't reached the delay threshold %d, skip" % (c0, delay))
+                                    # cout.info("%s hasn't reached the delay threshold %d, skip" % (c0, delay))
+                                    pass
                                 else:
                                     tasks.append((ix, c0))
                                     cout.info("%s is AVAILABLE now !" % c0)
@@ -499,8 +500,8 @@ def run_elective_loop():
                     mc = goals[mix]
                     if mc in elected: # ignore course in advanced
                         is_mutex = True
-                        cout.info("%s --x-- %s" % (course, mc))
-                        cout.info("%s is ignored by mutex rules in advance" % course)
+                        # cout.info("%s --x-- %s" % (course, mc))
+                        # cout.info("%s is ignored by mutex rules in advance" % course)
                         _ignore_course(course, "Mutex rules")
                         break
 
@@ -513,11 +514,9 @@ def run_elective_loop():
                 recognizer_attemp = 0
                 while True:
 
-                    cout.info("Fetch a captcha")
                     r = elective.get_DrawServlet()
 
                     captcha = recognizer.recognize(r.content)
-                    cout.info("Recognition result: %s" % captcha.code)
 
                     r = elective.get_Validate(captcha.code, config.iaaa_id)
                     try:
@@ -738,13 +737,14 @@ def run_elective_loop():
                 elective = None
 
             if noWait:
-                cout.info("")
-                cout.info("======== END Loop %d ========" % environ.elective_loop)
-                cout.info("")
+                # cout.info("")
+                # cout.info("======== END Loop %d ========" % environ.elective_loop)
+                # cout.info("")
+                pass
             else:
                 t = _get_refresh_interval()
-                cout.info("")
-                cout.info("======== END Loop %d ========" % environ.elective_loop)
-                cout.info("Main loop sleep %s s" % t)
-                cout.info("")
+                # cout.info("")
+                # cout.info("======== END Loop %d ========" % environ.elective_loop)
+                # cout.info("Main loop sleep %s s" % t)
+                # cout.info("")
                 time.sleep(t)

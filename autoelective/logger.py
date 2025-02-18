@@ -80,10 +80,22 @@ class ConsoleLogger(BaseLogger):
         return handler
 
 
-class FileLogger(BaseLogger):
+class FileWarningLogger(BaseLogger):
     """ 文件日志输出类 """
 
     default_level = logging.WARNING
+
+    def _get_handler(self):
+        file = os.path.join(_USER_ERROR_LOG_DIR, "%s.log" % self._name)
+        handler = TimedRotatingFileHandler(file, when='d', interval=1, encoding="utf-8-sig")
+        handler.setLevel(self._level)
+        handler.setFormatter(self._format)
+        return handler
+
+class FileInfoLogger(BaseLogger):
+    """ 文件日志输出类 """
+
+    default_level = logging.INFO
 
     def _get_handler(self):
         file = os.path.join(_USER_ERROR_LOG_DIR, "%s.log" % self._name)
